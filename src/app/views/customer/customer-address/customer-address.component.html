@@ -1,0 +1,81 @@
+<div class="col-sm-12">
+    <div class="card">
+        <div class="card-header">
+            <strong>Customers</strong>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Phone Number</th>
+                        <th>Fax Number</th>
+                        <th>Address</th>
+                        <th>Action</th>
+                        <!-- <th>Delete</th> -->
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="let ad of custAddress | paginate: { itemsPerPage: pageSize, currentPage: pageIndex, totalItems: totalRecords }; let i=index;">
+                        <td>{{ad.firstName}}</td>
+                        <td>{{ad.lastName}}</td>
+                        <td>{{ad.email}}</td>
+                        <td>{{ad.phoneNo}}</td>
+                        <td>{{ad.faxNo}}</td>
+                        <td>
+                            <span *ngFor="let a of ad.address">
+                                {{a}} <br>
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-success btn-sm mt-1" (click)="navigateToEditAddress(ad.customerId,ad.addressId)">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                       
+                            <button class="btn btn-danger btn-sm mt-1">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr class="top-mrging">
+                        <td colspan="9" *ngIf="(custAddress).length == 0" role="alert" class="alert-warning">
+                        <strong>No record found</strong>
+                        </td>
+                        </tr>
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-md-4 col-12">
+                    <div class="total-count--table">
+                        <span>Total number of records : {{ totalRecords}}</span>
+                        <button class="btn btn-primary btn-sm" (click)="getCustomerOrderAddress()"><i
+                                class="fa fa-refresh"></i></button>
+                    </div>
+                </div>
+                <div class="col-md-6 col-12" *ngIf="(custAddress).length > 0">
+                    <div class="text-right pagignation-page">
+                        <pagination-controls class="pagination-sm pagination-box" (pageChange)="pageChanged($event)">
+                        </pagination-controls>
+                    </div>
+                </div>
+                <div class="col-md-2 col-12" *ngIf="custAddress.length > 0">
+                    <div class="text-left pagignation-select">
+                        <select class="form-control" [(ngModel)]="pageSize"
+                            (change)="changePageSize($event.target.value)">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="40">40</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

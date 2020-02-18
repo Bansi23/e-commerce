@@ -1,0 +1,158 @@
+<div class="col-sm-12">
+    <div class="card">
+        <div class="card-header">
+            <strong>Order</strong>
+        </div>
+        <div class="card-body">
+            <form [formGroup]="searchOrder">
+                <div class="row">
+                    <!-- <div class="form-group col-sm-6">
+                        <label>Start Date</label>
+                        <my-date-picker [options]="myDatePickerOptions" formControlName="sdate">
+                        </my-date-picker>
+                    </div> -->
+
+                    <div class="form-group col-sm-6">
+                        <label for="city">Payment status</label>
+                        <select class="form-control" formControlName="paymentstatus">
+                            <option value="">All</option>
+                            <option *ngFor="let item of lstPaymentStatus">{{item.itemName}}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label for="city">Order status</label>
+                        <select class="form-control" formControlName="orderstatus">
+                            <option value="">All</option>
+                            <option *ngFor="let item of lstOrderStatus">{{item.itemName}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- <div class="form-group col-sm-6">
+                        <label>End Date</label>
+                        <my-date-picker [options]="myDatePickerOptions" formControlName="edate">
+                        </my-date-picker>
+                    </div> -->
+                    <!-- <div class="form-group col-sm-6">
+                        <label for="city">Payment Status</label>
+                        <select class="form-control" formControlName="paymentStatus">
+                            <option value="All">All</option>
+                            <option *ngFor="let item of lstPaymentStatus" [value]="item.itemName">{{item.itemName}}</option>
+                        </select>
+                    </div> -->
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label>Shipping status</label>
+                        <select class="form-control" formControlName="shippingstatus">
+                            <option value="">All</option>
+                            <option *ngFor="let item of lstShippingStatus">{{item.itemName}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label>Go directly to order #</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" formControlName="orderno">
+                            <span class="input-group-append">
+                                <button type="button" class="btn btn-primary" (click)="goDirectlyOrder()">Go</button>
+                            </span>
+                        </div>
+                        <span class="text-danger"
+                            *ngIf="searchOrder.get('orderno').hasError('pattern') && searchOrder.get('orderno').touched">
+                            Enter only digit
+                        </span>
+                    </div>
+                </div>
+            </form>
+            <!-- <button class="btn btn-info btn-sm text-white pull-right " (click)="GetRecord()"><i
+                    class="fa fa-search"></i>
+                Search</button> -->
+            <button class="btn btn-info btn-sm text-white pull-right " (click)="searchRecord()"><i
+                    class="fa fa-search"></i>
+                Search</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <strong>Order List</strong>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" [(ngModel)]="selectAll" (change)="select_all()"></th>
+                            <th *ngFor="let h of tableHeader">{{h | titlecase}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr
+                            *ngFor="let lstorder of lstOrderData| paginate: { itemsPerPage:pageSize , currentPage: pageIndex , totalItems: totalRecord}; let i = index">
+                            <td> <input type="checkbox" [(ngModel)]="lstorder.select" (change)="checkIfAllSelected()"></td>
+                            <td><button class="btn btn-color btn-sm col-sm-12" (click)="ViewData(lstorder.id)"> <i class="fa fa-eye"></i></button></td>
+                            <td>{{lstorder.id}}</td>
+                            <td><span [ngClass]="{
+                                'badge-info': lstorder.order_status == 'Processing',
+                                'badge-warning': lstorder.order_status =='Pending',
+                                'badge-success': lstorder.order_status =='Complete',
+                                'badge-danger': lstorder.order_status =='Cancelled'}" class="badge">
+                                    {{lstorder.order_status}}</span>
+                            </td>
+                            <td>{{lstorder.payment_status}}</td>
+                            <td>{{lstorder.shipping_status}}</td>
+                            <td>{{lstorder.customer.first_name}}{{lstorder.customer.last_name}}{{lstorder.customer.email}}
+                            </td>
+                            <td>{{lstorder.created_on_utc | date :'dd/MM/yyyy,h:mm:ss a'}}</td>
+                            <td><span class="pull-right">{{lstorder.order_total | number:'2.2-2'}}</span></td>
+                        </tr>
+                        <tr *ngIf="lstOrderData.length > 0">
+                            <td colspan="8"></td>
+                            <td><span class="pull-right">{{finalTotal | number:'2.2-2'}}</span></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="9" *ngIf="(lstOrderData).length == 0" class="alert">No  record found
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row" *ngIf="totalRecord">
+                <div class="col-md-4 col-sm-12">
+                    <div class="total-count--table">
+                        <span> Total number of records :{{totalRecord}}</span>
+                        <button class="btn btn-primary btn-sm" (click)="GetRecord()"><i
+                                class="fa fa-refresh"></i></button>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-12" *ngIf="(lstOrderData).length > 0">
+                    <div class="text-right">
+                        <pagination-controls class="pagination-sm pagination-box" (pageChange)="pageChanged($event)">
+                        </pagination-controls>
+                    </div>
+                </div>
+
+                <div class="col-md-2 col-sm-12" *ngIf="(lstOrderData).length > 0">
+                    <div class="text-left">
+                        <select class="form-control" [(ngModel)]="pageSize"
+                            (change)="selectedChanged($event.target.value)">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="40">40</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/.col-->

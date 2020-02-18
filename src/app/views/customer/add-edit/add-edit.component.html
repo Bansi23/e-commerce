@@ -1,0 +1,431 @@
+<div class="col">
+    <div class="card">
+        <div class="card-header">
+            <strong>Add a new customer</strong> &nbsp;&nbsp;
+            <!-- <i class="fa fa-arrow mb-2-circle-left"></i>
+            <a href="" style="text-decoration: none;" routerLink="/customers" routerLinkActive="active">back to customer
+                list</a> -->
+            <button class="btn btn-link" routerLink="/customers" routerLinkActive="active"><i
+                    class="fa fa-arrow-circle-o-left"> back to
+                    customer list</i></button>
+            <div class="pull-right">
+                <button type="button" class="btn btn-info btn-sm" (click)="saveAddEditForm()">
+                    <i class="fa fa-save"></i> Save</button>
+                <button type="button" class="btn btn-info btn-sm" (click)="saveAndEditForm()">
+                    <i class="fa fa-save"></i> Save and continue edit</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="animated fadeIn">
+                <div class="row">
+                    <div class="col lg-12">
+                        <tabset class=" tab-container tab-box-main nav-justified">
+                            <tab heading="Customer info" class="nav-item">
+                                <div class="card">
+                                    <div class="card-body" *ngIf="!isChangePassword">
+                                        <form [formGroup]="addCustomerForm">
+                                            <div class="row mb-2">
+                                                <div class="col-sm-6">
+                                                    <label for="first name" class="pull-left">First Name</label>
+                                                    <input formControlName="custFirstName" type="text"
+                                                        class="form-control">
+                                                    <span class="text-danger pull-left"
+                                                        *ngIf="addCustomerForm.get('custFirstName').hasError('required') && addCustomerForm.get('custFirstName').touched">
+                                                        First name is required
+                                                    </span>
+
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label for="last name" class="pull-left">Last Name</label>
+                                                    <input formControlName="custLastName" type="text"
+                                                        class="form-control">
+                                                    <span class="text-danger  pull-left"
+                                                        *ngIf="addCustomerForm.get('custLastName').hasError('required') && addCustomerForm.get('custLastName').touched">
+                                                        Last name is required
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-sm-6">
+                                                    <label for="email" class="pull-left">Email</label>
+                                                    <input type="email" formControlName="custEmail"
+                                                        class="form-control">
+                                                    <span class="text-danger pull-left"
+                                                        *ngIf="addCustomerForm.get('custEmail').hasError('required') && addCustomerForm.get('custEmail').touched">
+                                                        Email address is required
+                                                    </span>
+                                                    <span class="text-danger pull-left"
+                                                        *ngIf="addCustomerForm.get('custEmail').hasError('pattern') && addCustomerForm.get('custEmail').touched">
+                                                        Enter valid email address
+                                                    </span>
+
+
+
+                                                </div>
+                                                <div class="col-sm-6 mb-2">
+                                                    <label for="password" class="pull-left">Password</label>
+                                                    <input type="password" formControlName="custPassword"
+                                                        class="form-control">
+                                                    <span class="text-danger pull-left"
+                                                        *ngIf="addCustomerForm.get('custPassword').hasError('required') && addCustomerForm.get('custPassword').touched">
+                                                        Password is required
+                                                    </span>
+                                                    <span class="text-danger pull-left pull-left"
+                                                        *ngIf="addCustomerForm.get('custPassword').hasError('pattern') && addCustomerForm.get('custPassword').touched">
+                                                        Password must have lowercase, uppercase, numeric value, special
+                                                        character and minimum 8 character</span>
+                                                    <br>
+                                                    <div class="pull-right" *ngIf="isChangePassword">
+                                                        <button type="button" class="btn btn-info btn-sm"
+                                                            (click)="changePassword()">Change password</button>
+                                                    </div>
+
+
+
+                                                </div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-sm-6 mb-2">
+                                                    <label for="customer roles" class="pull-left">Customer Roles</label>
+                                                    <angular2-multiselect [data]="lstCustomerRoles"
+                                                        formControlName="custRoles" class="form-control"
+                                                        [settings]="dropdownOrderStatus"
+                                                        (onSelect)="onItemRoleSelect($event)"
+                                                        (onDeSelect)="onItemRoleSelect($event)"
+                                                        (onSelectAll)="onItemRoleSelect($event)"
+                                                        (onDeSelectAll)="onItemRoleSelect($event)">
+                                                        <ng-container
+                                                            *ngIf="lstCustomerRoles.length == selectedcustomerRoles.length">
+                                                            <c-badge>
+                                                                <ng-template let-item="item">
+                                                                    <label
+                                                                        style="margin: 0px; padding-right: 5px;">All</label>
+                                                                </ng-template>
+                                                            </c-badge>
+                                                        </ng-container>
+                                                    </angular2-multiselect>
+
+                                                    <span class="text-danger pull-left "
+                                                        *ngIf="addCustomerForm.get('custRoles').hasError('required') && addCustomerForm.get('custRoles').touched">
+                                                        Select customer role
+                                                    </span>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label for="date of birth" class="pull-left">Date Of Birth</label>
+                                                    <my-date-picker formControlName="custDob"
+                                                        [options]="myDatePickerOptions">
+                                                    </my-date-picker>
+                                                    <!-- <span class="text-danger pull-left"
+                                                            *ngIf="addCustomerForm.get('custDob').hasError('required') && addCustomerForm.get('custDob').touched">
+                                                            Date of birth is required
+                                                        </span> -->
+                                                </div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <!-- <div class="col-sm-6">
+                                                    <label for="manager of vendor">Manager of vendor</label>
+                                                    <select formControlName="custManagerOfVendor" class="form-control">
+                                                        <option value="">Select manager of vendor</option>
+                                                        <option value="{{m.id}}" *ngFor="let m of lstManagerOfVendor">
+                                                            {{m.text}}
+                                                        </option>
+                                                    </select>
+                                                    <span class="text-danger pull-left"
+                                                        *ngIf="addCustomerForm.get('custManagerOfVendor').hasError('required') && addCustomerForm.get('custManagerOfVendor').touched">
+                                                        Select manager of vendor
+                                                    </span><br>
+                                                    <span>Note: if you have a vendor associated with this customer, then
+                                                        also ensure it is in "Vendors" customer role.</span>
+                                                </div> -->
+                                                <div class="col-sm-6">
+                                                    <label for="company name" class="pull-left">Company Name</label>
+                                                    <input type="text" formControlName="custCompanyName"
+                                                        class="form-control">
+                                                    <!-- <span class="text-danger pull-left" *ngIf="addCustomerForm.get('custCompanyName').hasError('required') && addCustomerForm.get('custCompanyName').touched">
+                                                                Company name is required
+                                                            </span> -->
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label for="admin comment" class="pull-left">Admin Comment</label>
+                                                    <textarea formControlName="custAdminComment"
+                                                        class="form-control"></textarea>
+                                                </div>
+
+                                            </div>
+                                            <br>
+
+                                            <div class="row mb-2">
+                                                <div class="col-sm-6">
+                                                    <label for="manager of vendor" class="pull-left">Manager Of
+                                                        Vendor</label>
+                                                    <select formControlName="custManagerOfVendor" class="form-control">
+                                                        <option value="">Select Manager Of Vendor</option>
+                                                        <option value="{{m.id}}" *ngFor="let m of lstManagerOfVendor">
+                                                            {{m.text}}
+                                                        </option>
+                                                    </select>
+                                                    <span class="text-danger pull-left"
+                                                        *ngIf="addCustomerForm.get('custManagerOfVendor').hasError('required') && addCustomerForm.get('custManagerOfVendor').touched">
+                                                        Select Manager Of Vendor
+                                                    </span><br>
+                                                    <span>Note: if you have a vendor associated with this customer, then
+                                                        also ensure it is in "Vendors" customer role.</span>
+                                                </div>
+
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-sm-6">
+                                                    <label for="custIsExempt" class="pull-left">Is Tax Exempt?
+                                                        <input type="checkbox" id="custIsExempt"
+                                                            formControlName="custIsTaxExempt">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-sm-6">
+                                                    <label for="custNewsLetter" class="pull-left">Newsletter
+                                                        <input id="custNewsLetter" type="checkbox"
+                                                            formControlName="custNewsletter"> <span>(Your store
+                                                            name)</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-sm-6">
+                                                    <label for="active" class="pull-left">Active
+                                                        <input id="active" [(ngModel)]="chkIsActive" type="checkbox"
+                                                            formControlName="custActive">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-2" *ngIf="isChangePassword">
+                                                <div class="col-sm-6">
+                                                    <label for="ipaddress" class="pull-left">IP Address</label>
+                                                    <label></label>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-2" *ngIf="isChangePassword">
+                                                <div class="col-sm-6">
+                                                    <label for="createdOn" class="pull-left">Created On &nbsp;</label>
+                                                    <label
+                                                        class="pull-left">{{createdOn | date :'dd/MM/yyyy,h:mm:ss a'}}</label>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-2" *ngIf="isChangePassword">
+                                                <div class="col-sm-6">
+                                                    <label for="lastActivity" class="pull-left">Last Activity
+                                                        &nbsp;</label>
+                                                    <label
+                                                        class="pull-left">{{lastActivity | date :'dd/MM/yyyy,h:mm:ss a'}}</label>
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                    <div class="card-body" *ngIf="isChangePassword">
+                                        <form [formGroup]="addCustomerForm">
+                                            <div class="row mb-2">
+                                                <div class="col-sm-6">
+                                                    <label for="first name" class="pull-left">First Name</label>
+                                                    <input formControlName="custFirstName" type="text"
+                                                        class="form-control">
+                                                    <span class="text-danger pull-left"
+                                                        *ngIf="addCustomerForm.get('custFirstName').hasError('required') && addCustomerForm.get('custFirstName').touched">
+                                                        First name is required
+                                                    </span>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label for="last name" class="pull-left">Last Name</label>
+                                                    <input formControlName="custLastName" type="text"
+                                                        class="form-control">
+                                                    <span class="text-danger pull-left"
+                                                        *ngIf="addCustomerForm.get('custLastName').hasError('required') && addCustomerForm.get('custLastName').touched">
+                                                        Last name is required
+                                                    </span>
+
+                                                </div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <!-- <div class="col-sm-6">
+                                                <label for="password" class="pull-left">Password</label>    
+                                                <input type="password" formControlName="custPassword"
+                                                    class="form-control">
+                                                <br>
+                                                <div class="pull-right" *ngIf="isChangePassword">
+                                                    <button type="button" class="btn btn-info"
+                                                        (click)="changePassword()">Change password</button>
+                                                </div>
+                                                <span class="text-danger pull-left"
+                                                    *ngIf="addCustomerForm.get('custPassword').hasError('required') && addCustomerForm.get('custPassword').touched">
+                                                    Password is required
+                                                </span>
+                                                <span class="text-danger pull-left"
+                                                    *ngIf="addCustomerForm.get('custPassword').hasError('pattern') && addCustomerForm.get('custPassword').touched">
+                                                        Password should contain uppercase,lowercase letters and numbers.
+                                                </span>
+                                            </div> -->
+                                                <div class="col-sm-6">
+                                                    <label for="email" class="pull-left">Email</label>
+                                                    <input type="email" formControlName="custEmail"
+                                                        class="form-control">
+                                                    <span class="text-danger pull-left"
+                                                        *ngIf="addCustomerForm.get('custEmail').hasError('required') && addCustomerForm.get('custEmail').touched">
+                                                        Email address is required
+                                                    </span>
+                                                    <span class="text-danger pull-left"
+                                                        *ngIf="addCustomerForm.get('custEmail').hasError('pattern') && addCustomerForm.get('custEmail').touched">
+                                                        Enter valid email address
+                                                    </span>
+
+                                                </div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-sm-6">
+                                                    <label for="customer roles" class="pull-left">Customer Roles</label>
+                                                    <angular2-multiselect [data]="lstCustomerRoles"
+                                                        formControlName="custRoles" class="form-control"
+                                                        [settings]="dropdownOrderStatus"
+                                                        (onSelect)="onItemRoleSelect($event)"
+                                                        (onDeSelect)="onItemRoleSelect($event)"
+                                                        (onSelectAll)="onItemRoleSelect($event)"
+                                                        (onDeSelectAll)="onItemRoleSelect($event)">
+
+                                                        <ng-container
+                                                            *ngIf="lstCustomerRoles?.length == selectedcustomerRoles?.length">
+                                                            <c-badge>
+                                                                <ng-template let-item="item">
+                                                                    <label
+                                                                        style="margin: 0px; padding-right: 5px;">All</label>
+                                                                </ng-template>
+                                                            </c-badge>
+                                                        </ng-container>
+                                                    </angular2-multiselect>
+                                                    <span class="text-danger pull-left"
+                                                        *ngIf="addCustomerForm.get('custRoles').hasError('required') && addCustomerForm.get('custRoles').touched">
+                                                        Select customer role
+                                                    </span>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label for="date of birth" class="pull-left">Date Of Birth</label>
+                                                    <my-date-picker formControlName="custDob"
+                                                        [options]="myDatePickerOptions">
+                                                    </my-date-picker>
+                                                    <!-- <span class="text-danger pull-left"
+                                                        *ngIf="addCustomerForm.get('custDob').hasError('required') && addCustomerForm.get('custDob').touched">
+                                                        Date of birth is required
+                                                    </span> -->
+                                                </div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <!-- <div class="col-sm-6">
+                                                <label for="manager of vendor">Manager of vendor</label>
+                                                <select formControlName="custManagerOfVendor" class="form-control">
+                                                    <option value="">Select manager of vendor</option>
+                                                    <option value="{{m.id}}" *ngFor="let m of lstManagerOfVendor">
+                                                        {{m.text}}
+                                                    </option>
+                                                </select>
+                                                <span class="text-danger pull-left"
+                                                    *ngIf="addCustomerForm.get('custManagerOfVendor').hasError('required') && addCustomerForm.get('custManagerOfVendor').touched">
+                                                    Select manager of vendor
+                                                </span><br>
+                                                <span>Note: if you have a vendor associated with this customer, then
+                                                    also ensure it is in "Vendors" customer role.</span>
+                                            </div> -->
+                                                <div class="col-sm-6">
+                                                    <label for="company name" class="pull-left">Company Name</label>
+                                                    <input type="text" formControlName="custCompanyName"
+                                                        class="form-control">
+                                                    <!-- <span class="text-danger pull-left" *ngIf="addCustomerForm.get('custCompanyName').hasError('required') && addCustomerForm.get('custCompanyName').touched">
+                                                            Company name is required
+                                                        </span> -->
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label for="admin comment" class="pull-left">Admin Comment</label>
+                                                    <textarea formControlName="custAdminComment"
+                                                        class="form-control"></textarea>
+                                                </div>
+
+                                            </div>
+                                            <br>
+
+                                            <div class="row mb-2">
+                                                <!-- <div class="col-sm-6">
+                                                    <label for="manager of vendor" class="pull-left">Manager of
+                                                        vendor</label>
+                                                    <select formControlName="custManagerOfVendor" class="form-control">
+                                                        <option value="">Select manager of vendor</option>
+                                                        <option value="{{m.id}}" *ngFor="let m of lstManagerOfVendor">
+                                                            {{m.text}}
+                                                        </option>
+                                                    </select>
+                                                    <span class="text-danger pull-left"
+                                                        *ngIf="addCustomerForm.get('custManagerOfVendor').hasError('required') && addCustomerForm.get('custManagerOfVendor').touched">
+                                                        Select manager of vendor
+                                                    </span><br>
+                                                    <span>Note: if you have a vendor associated with this customer, then
+                                                        also ensure it is in "Vendors" customer role.</span>
+                                                </div> -->
+
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-sm-6">
+                                                    <label for="custIsExempt" class="pull-left">Is Tax Exempt?
+                                                        <input type="checkbox" id="custIsExempt"
+                                                            formControlName="custIsTaxExempt">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-sm-6">
+                                                    <label for="custNewsLetter" class="pull-left">Newsletter
+                                                        <input id="custNewsLetter" type="checkbox"
+                                                            formControlName="custNewsletter"> <span>(Your store
+                                                            name)</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-sm-6">
+                                                    <label for="active" class="pull-left">Active
+                                                        <input id="active" type="checkbox" formControlName="custActive">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-2" *ngIf="isChangePassword">
+                                                <div class="col-sm-6">
+                                                    <label for="ipaddress" class="pull-left">IP Address</label>
+                                                    <label></label>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-2" *ngIf="isChangePassword">
+                                                <div class="col-sm-6">
+                                                    <label for="createdOn" class="pull-left">Created On &nbsp;</label>
+                                                    <label class="pull-left">{{createdOn | date : 'short'}}</label>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-2" *ngIf="isChangePassword">
+                                                <div class="col-sm-6">
+                                                    <label for="lastActivity" class="pull-left">Last Activity
+                                                        &nbsp;</label>
+                                                    <label class="pull-left">{{lastActivity | date : 'short'}}</label>
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </tab>
+                            <tab heading="Orders" class="nav-item" *ngIf="isChangePassword">
+                                <app-customer-order></app-customer-order>
+                            </tab>
+                            <tab heading="Addresses" class="nav-item" *ngIf="isChangePassword">
+                                <app-customer-address></app-customer-address>
+                            </tab>
+                        </tabset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

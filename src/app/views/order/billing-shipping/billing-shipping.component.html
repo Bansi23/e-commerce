@@ -1,0 +1,191 @@
+<ng-container *ngFor="let billingData of viewRecord; let i=index">
+    <div class="card card-default">
+        <div class="card-body">
+            <div class="row">
+                <div class="col col-md-6">
+                    <table class="table table-hover table-bordered table-striped" style="max-width: 500px;">
+                        <tbody>
+                            <tr>
+                                <th colspan="2">
+                                    <strong>Billing address</strong>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td> Full name</td>
+                                <td>{{billingData?.billing_address?.first_name}}
+                                    {{billingData?.billing_address?.last_name}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td> Email</td>
+                                <td>{{billingData?.billing_address.email}}</td>
+                            </tr>
+                            <tr>
+                                <td>Phone</td>
+                                <td>{{billingData?.billing_address?.phone_number}}</td>
+                            </tr>
+                            <tr>
+                                <td>Fax</td>
+                                <td>{{billingData?.billing_address?.fax_number}}</td>
+                            </tr>
+                            <tr>
+                                <td> Company</td>
+                                <td> {{billingData?.billing_address?.company}}</td>
+                            </tr>
+                            <tr>
+                                <td> Address 1</td>
+                                <td> {{billingData?.billing_address?.address1}} </td>
+                            </tr>
+                            <tr>
+                                <td>Address 2</td>
+                                <td> {{billingData?.billing_address?.address2}}</td>
+                            </tr>
+                            <tr>
+                                <td> City</td>
+                                <td> {{billingData?.billing_address?.city}}</td>
+                            </tr>
+                            <tr>
+                                <td>State / province</td>
+                                <td>{{displaybilling?.name}}</td>
+                            </tr>
+                            <tr>
+                                <td> Zip / postal code</td>
+                                <td>{{billingData?.billing_address.zip_postal_code}}</td>
+                            </tr>
+                            <tr>
+                                <td>Country </td>
+                                <td>{{billingData?.billing_address.country}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="btn btn-blue pull-right btn-sm"
+                        (click)="billingEdit(billingData.id , this.billingData.billing_address.id)">Edit</button>
+
+                </div>
+                <ng-container *ngIf="billingData?.shipping_address; else elseTemplate">
+                    <div class="col-md-6">
+                        <table class="table table-hover table-bordered  table-striped" style="max-width: 500px;">
+                            <tbody>
+                                <tr>
+                                    <th colspan="2">
+                                        <strong>Shipping address</strong>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>Full name</td>
+                                    <td>{{billingData?.shipping_address?.first_name}}
+                                        {{billingData?.shipping_address?.last_name}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Email</td>
+                                    <td>{{billingData?.shipping_address?.email}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Phone </td>
+                                    <td>{{billingData?.shipping_address?.phone_number}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Fax</td>
+                                    <td>{{billingData?.shipping_address?.fax_number}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Company</td>
+                                    <td>{{billingData?.shipping_address?.company}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Address 1</td>
+                                    <td> {{billingData?.shipping_address?.address1}}</td>
+                                </tr>
+                                <tr>
+                                    <td> Address 2</td>
+                                    <td>{{billingData?.shipping_address?.address2}}</td>
+                                </tr>
+                                <tr>
+                                    <td>City</td>
+                                    <td>{{billingData?.shipping_address?.city}}</td>
+                                </tr>
+                                <tr>
+                                    <td> State / province</td>
+                                    <td>{{displayshipping?.name}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Zip / postal code</td>
+                                    <td> {{billingData?.shipping_address?.zip_postal_code}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Country</td>
+                                    <td>{{billingData?.shipping_address?.country}}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+
+                                        <button class="btn btn-link pull-left" (click)="goToAddress()"><i
+                                                class="fa fa-map-marker">View address on Google
+                                                Maps</i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button class="btn btn-blue pull-right btn-sm"
+                            (click)="shippingEdit(billingData.id ,  this.billingData.shipping_address.id)">Edit</button>
+                    </div>
+
+                </ng-container>
+                <ng-template #elseTemplate>
+                    <div class="col-md-6">
+                        <table class="table table-hover table-bordered table-striped" style="max-width: 500px;">
+                            <tbody>
+                                <tr>
+                                    <th colspan="2">
+                                        <strong>Shipping address</strong>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Shipping not required</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </ng-template>
+
+            </div>
+        </div>
+    </div>
+    <!-- -->
+    <div class="card card-default" *ngIf="billingData.shipping_status !='ShippingNotRequired'">
+        <div class="card-body pull-left">
+            <div class="row">
+                <div class="col-md-3">
+                    <b>Shipping method</b>
+                </div>
+                <div class="col-md-3" *ngIf="editRec">
+                    <span>{{billingData?.shipping_method}}</span>
+                    <button class="btn btn-blue mx-2 " (click)="EditShipMethod(billingData)">Edit</button>
+                </div>
+
+                <div class="col-md-7" *ngIf="!editRec">
+                    <form [formGroup]="editShippingMethodForm">
+                        <div class="input-group">
+                            <input type="text" class="form-control" formControlName="shippingMethod">
+                            <span class="input-group-append">
+                                <button type="button" class="btn btn-primary" (click)="SaveChanges()">Save</button>
+                                <button type="button" class="btn btn-danger" (click)="cancleEdit()">Cancle</button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <b>Shipping Status</b>
+                </div>
+                <div class="col-md-3">
+                    <b>{{billingData.shipping_status}}</b>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>

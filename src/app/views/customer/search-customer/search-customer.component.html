@@ -1,0 +1,99 @@
+<div class="col-sm-12">
+    <div class="card">
+        <div class="card-header">
+            <strong>Customer List</strong>
+            <div class="pull-right">
+                <button class="btn btn-primary text-white btn-sm" (click)="gotoAddCustomer()"><i class="fa fa-plus">Add
+                        New</i></button>&nbsp;
+                <!-- <button class="btn btn-danger text-white" (click)="deleteSelected()"><i class="fa fa-trash">Delete (selected)</i></button> -->
+
+            </div>
+        </div>
+        <!-- <div class="card-body"> -->
+        <!-- <form [formGroup]="searchCustomerForm">
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label for="email">Email</label>
+                        <input type="email" formControlName="custEmail" class="form-control">
+                                            <span class="text-danger"
+                            *ngIf="searchCustomerForm.get('custEmail').hasError('pattern') && searchCustomerForm.get('custEmail').touched">
+                            Enter valid email address
+                        </span>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="company">Company</label>
+                        <input type="text" formControlName="custCompany" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label for="first name">First name</label>
+                        <input type="text" formControlName="custFirstName" class="form-control">
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="ip address">IP address</label>
+                        <input type="number" formControlName="custIPAddress" class="form-control">
+                        <span class="text-danger"
+                            *ngIf="searchCustomerForm.get('custIPAddress').hasError('pattern') && searchCustomerForm.get('custIPAddress').touched">
+                            Enter valid IP address
+                        </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label for="last name">Last name</label>
+                        <input type="text" formControlName="custLastName" class="form-control">
+                    </div>
+                    <div class="form-group col-sm-6"> -->
+        <!-- <select formControlName="custRole" name="" id="">
+
+                        </select> -->
+        <!-- <label for="customer roles">Customer roles</label> -->
+        <!-- <angular2-multiselect [data]="lstCustomerRoles" [(ngModel)]="selectedItems" 
+                        [settings]="dropdownSettings" 
+                        (onSelect)="onItemSelect($event)" 
+                        (onDeSelect)="OnItemDeSelect($event)"
+                        (onSelectAll)="onSelectAll($event)"
+                        (onDeSelectAll)="onDeSelectAll($event)"></angular2-multiselect> -->
+
+        <!-- </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+
+                        <label for="">Date of birth</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <select  class="form-control">
+                            <option value="0">Month</option>
+                            <option value="" *ngFor="let m of lstCustDOBMonth">
+                                {{m.text}}
+                            </option>
+                        </select>
+                     </div>
+                     <div class="col-md-3">
+                         <select class="form-control">
+                             <option value="0">Day</option>
+                             <option value="" *ngFor="let d of lstCustDOBDay">{{d.text}}</option>
+                         </select>
+                     </div>
+                    
+                </div> <br>
+                <div class="row">
+                    <div class="col">
+                        <div style="text-align: center;">
+
+                            <button type="button" (click)="searchRecords()" class="btn btn-primary btn-search">
+                                <i class="fa fa-search"></i>
+                                Search
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form> -->
+        <app-customer-list></app-customer-list>
+        <!-- </div> -->
+    </div>
+</div>

@@ -1,0 +1,59 @@
+<div class="card">
+    <div class="card-header">
+        <strong>Product List</strong>
+        <button class="btn btn-link" (click)="backToSearchList()"><i class="fa fa-arrow-circle-o-left"> back to
+                View Order</i></button>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>SKU</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    *ngFor="let lstproduct of lstProductData| paginate: { itemsPerPage:pageSize , currentPage: pageIndex , totalItems: countProduct}; let i = index">
+                    <td><button class="btn btn-info text-white btn-sm" (click)="SelectProduct(lstproduct.id)">Select</button>
+                    </td>
+                    <td>{{lstproduct.id}}</td>
+                    <td>{{lstproduct.name}}</td>
+                    <td>{{lstproduct.sku}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="row">
+
+            <div class="col-md-2 col-12">
+                <div class="total-count--table">
+                    <span> Total number of records :{{countProduct}}</span>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-12" *ngIf="(lstProductData).length > 0">
+                <div class="text-right pagignation-page">
+                    <pagination-controls class="pagination-sm pagination-box" (pageChange)="pageChanged($event)">
+                    </pagination-controls>
+                </div>
+            </div>
+
+            <div class="col-md-2 col-12" *ngIf="(lstProductData).length > 0">
+                <div class="text-left pagignation-select">
+                    <select class="form-control" [(ngModel)]="pageSize" (change)="selectedChanged($event.target.value)">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-2" *ngIf="(lstProductData).length > 0">
+                <p>items per page</p>
+            </div>
+        </div>
+    </div>
+</div>

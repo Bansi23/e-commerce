@@ -1,0 +1,239 @@
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <ng-container *ngFor="let item of viewRecord; let i=index">
+            <div class="card">
+                <div class="card-body text-left">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <b>Order status</b>
+                        </div>
+                        <div class="col-md-6">
+                            <b> {{item.order_status}}</b>
+                            <button class="btn btn-danger btn-sm" *ngIf="item.order_status !='Cancelled'"
+                                (click)="CancleOrder()">Cancle Order</button>
+                            <button class="btn btn-blue btn-sm" *ngIf="isOrder" (click)="changeStatus()">Change
+                                Status</button>
+                        </div>
+                        <div class="offset-md-3 col-md-10 mt-1" *ngIf="!isOrder">
+                            <form [formGroup]="orderstatusForm">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <select class="form-control" formControlName="orderStatus">
+                                            <option *ngFor="let item of lstOrderStatus">{{item.itemName}}</option>
+                                        </select>
+                                        <p>
+                                            This option is only for advanced users (not recommended to change manually).
+                                            All
+                                            appropriate
+                                            actions (such as inventory adjustment, sending notification emails, reward
+                                            points,
+                                            gift card
+                                            activation/deactivation, etc) should be done manually in this case.</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button class="btn btn-info btn-sm" (click)="saveOrderStatus()"><i
+                                                class="fa fa-save"> Save</i></button>
+                                        <button class="btn btn-danger btn-sm" (click)="cancleEdit()"><i
+                                                class="fa fa-close"> Cancle</i></button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-3">
+                            <b>Order #</b>
+                        </div>
+                        <div class="col-md-2">
+                            {{item.id}}
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-3">
+                            <b> Store </b>
+                        </div>
+                        <div class="col-md-3">
+                            Your store name
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/card-->
+
+            <div class="card">
+                <div class="card-body text-left">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <b>Customer</b>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-link button-link" (click)="editCustomer(item.id,item.customer_id)">
+                                {{item.customer.email}}</button>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-3">
+                            <b>Customer IP address</b>
+                        </div>
+                        <div class="col-md-3">
+                            <span>{{item.customer_ip}}</span>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-3">
+                            <b> Order subtotal </b>
+                        </div>
+                        <div class="col-md-3">
+                            <!-- <span> {{item.order_subtotal_excl_tax | number:'2.2-2'}} <b>excl tax</b></span> -->
+                            <span> ${{finalTotal | number:'2.2-2'}}<b> excl tax</b></span>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-3">
+                            <b> Order shipping </b>
+                        </div>
+                        <div class="col-md-3">
+                            <span> ${{item.order_shipping_excl_tax | number:'2.2-2'}} <b>excl tax</b></span>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-3">
+                            <b>Order tax </b>
+                        </div>
+                        <div class="col-md-3">
+                            <span> ${{item.order_tax | number:'2.2-2'}}</span>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-3">
+                            <b> Order total </b>
+                        </div>
+                        <!--  -->
+                        <div class="col-md-3">
+                            <span> ${{finalTotal | number:'2.2-2'}}</span>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-3">
+                            <b>Refunded amount</b>
+                        </div>
+                        <div class="col-md-3">
+                            <span> ${{item.refunded_amount | number:'2.2-2'}}</span>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-3">
+                            <b> Payment method </b>
+                        </div>
+                        <div class="col-md-3">
+                            <span> {{item.payment_method_system_name}}</span>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3" *ngIf="profitTotal">
+                        <div class="col-md-3">
+                            <b> Profit </b>
+                        </div>
+                        <div class="col-md-3">
+                            <span> ${{profitTotal | number:'2.2-2'}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/card-->
+
+            <div class="card">
+                <div class="card-body text-left">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <b>Payment status</b>
+                        </div>
+                        <div class="col-md-9">
+                            <span> {{item.payment_status}} </span>
+                            <div *ngIf="item.payment_status =='Pending'">
+                                <button class="btn btn-info btn-sm" (click)="paidAmount()">Mark As Paid</button>
+                            </div>
+                            <div *ngIf="item.payment_status =='Paid'">
+                                <button class="btn btn-info mb-1 btn-sm" (click)="refundAmount()"
+                                    *ngIf="item.refunded_amount == 0">Refund (Offline)</button>
+                                <button class="btn btn-info btn-sm" (click)="partialRefundAmount()"> Partial refund
+                                    (Offline) </button>
+                            </div>
+
+                            <div *ngIf="item.payment_status =='PartiallyRefunded'">
+                                <button class="btn btn-info btn-sm" (click)="paidAmount()">Mark As Paid</button>
+                                <button class="btn btn-info btn-sm" (click)="partialRefundAmount()"> Partial refund
+                                    (Offline) </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-3">
+                            <b>Created on</b>
+                        </div>
+                        <div class="col-md-3">
+                            <span> {{item.created_on_utc  | date :'dd/MM/yyyy,h:mm:ss a'}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/card-->
+        </ng-container>
+    </div>
+</div>
+
+<div class="modal fade" #changeModal="bs-modal" bsModal tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header header-box">
+                {{ 'Partial refund amount'}}
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()"
+                    [disabled]="refunded_Amount">
+                    <span aria-hidden="true" class="text-white">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-header refunded-box pull-left">
+                        Partial refund
+                    </div>
+                    <div class="card-body">
+                        <form [formGroup]="addrefund">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label class="pull-left">Amount to refund</label>
+                                    <input type="text" class="form-control" formControlName="refundedamount">
+                                    <span class="text-danger pull-left"
+                                        *ngIf="addrefund.get('refundedamount').hasError('pattern') && addrefund.get('refundedamount').touched ">
+                                        Enter only pogitive digit
+                                    </span>
+                                    <span class="text-danger pull-left"
+                                        *ngIf="addrefund.get('refundedamount').hasError('required') && addrefund.get('refundedamount').touched ">
+                                        Required
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <span class="pull-left">Max amount is {{partialAmount}} USD</span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info btn-sm" (click)="saveRefund()">{{ 'Refund Amount' }}</button>
+                <!-- <button class="btn btn-danger float-left btn-sm" (click)="close()">Close </button> -->
+            </div>
+        </div>
+    </div>
+</div>

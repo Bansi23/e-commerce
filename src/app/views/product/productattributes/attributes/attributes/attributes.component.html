@@ -1,0 +1,76 @@
+<div class="showContenet">
+    <div class="row">
+        <div class="col-lg-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th *ngFor="let h of tableHeader">{{h | titlecase}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="let attr of lstAttr | paginate: { itemsPerPage: pageSize, currentPage: pageIndex, totalItems: totalRecords }; let i=index;">
+                        <td>{{attr.product_attribute_name}}</td>
+                        <td>{{attr.text_prompt}}</td>
+                        <td><span class="fa"
+                                [ngClass]="{'fa-check text-success': attr.is_required , 'fa-close text-danger' : !attr.is_required}"></span>
+                        </td>
+                        <td>{{attr.attribute_control_type_name}}</td>
+                        <td>{{attr.display_order}}</td>
+                        <!-- <td></td> -->
+                        <td>
+                            <button class="btn btn-success btn-sm" (click)="editAttribute(attr.id)"><i
+                                    class="fa fa-edit"></i></button>
+                        </td>
+                    </tr>
+                    <tr class="top-mrging">
+                        <td colspan="6" *ngIf="(lstAttr).length == 0" role="alert" class="alert">No
+                            record Found
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-12">
+            <div class="total-count--table">
+                <span>Total number of records : {{ totalRecords}}</span>
+                <button class="btn btn-primary btn-sm" (click)="reloadAttribute()"><i
+                        class="fa fa-refresh"></i></button>
+            </div>
+        </div>
+        <div class="col-md-5 col-12" *ngIf="lstAttr.length > 0">
+            <div class="text-right pagignation-page">
+                <pagination-controls class="pagination-sm pagination-box" (pageChange)="pageChanged($event)">
+                </pagination-controls>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-12" *ngIf="lstAttr.length > 0">
+            <div class="text-left pagignation-select">
+                <select class="form-control" [(ngModel)]="pageSize" (change)="changePageSize($event.target.value)">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <button class="btn btn-primary left-margin btn-sm" (click)="addAttributes()"><i class="fa fa-plus">Add a new
+                attribute</i></button>
+    </div>
+</div>
+
+<div class="hideContent">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-info">
+                <strong>You need to save the product before you can add attributes for this page. </strong>
+            </div>
+        </div>
+    </div>
+</div>

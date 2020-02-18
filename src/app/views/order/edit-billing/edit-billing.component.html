@@ -1,0 +1,169 @@
+<div class="card">
+    <div class="card-header">
+        <strong>Edit Address</strong>
+        <button class="btn btn-link" (click)="backToSearchList()"><i class="fa fa-arrow-circle-o-left"> back to
+                View Order</i></button>
+        <button class="btn btn-info text-center text-white pull-right btn-sm" *ngIf="billingId"
+            [disabled]="!editbillingForm.valid " (click)="editBilling()"><i class="fa fa-save">
+                &nbsp;</i>Save</button>
+
+        <button class="btn btn-info text-center text-white pull-right btn-sm" *ngIf="shippingId" (click)="editShpping()"
+            [disabled]="!editbillingForm.valid "><i class="fa fa-save">
+                &nbsp;</i>Save</button>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="editbillingForm">
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label for="fnm">First Name<span class="text-danger"
+                            *ngIf="editbillingForm.controls.fnm.errors?.required">*</span></label>
+                    <input type="text" class="form-control" formControlName="fnm">
+                    <span class="text-danger"
+                        *ngIf="editbillingForm.get('fnm').hasError('required') && editbillingForm.get('fnm').touched">
+                        First Name is Required
+                    </span>
+                    <span class="text-danger"
+                        *ngIf="editbillingForm.get('fnm').hasError('pattern') && editbillingForm.get('fnm').touched">
+                        Enter valid First name
+                    </span>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label for="lnm">Last Name<span class="text-danger"
+                            *ngIf="editbillingForm.controls.lnm.errors?.required">*</span></label>
+                    <input type="text" class="form-control" formControlName="lnm">
+                    <span class="text-danger"
+                        *ngIf="editbillingForm.get('lnm').hasError('required') && editbillingForm.get('lnm').touched">
+                        Last Name is Required
+                    </span>
+                    <span class="text-danger"
+                        *ngIf="editbillingForm.get('lnm').hasError('pattern') && editbillingForm.get('lnm').touched">
+                        Enter valid Last name
+                    </span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label for="mail">E-mail<span class="text-danger"
+                            *ngIf="editbillingForm.controls.mail.errors?.required || editbillingForm.controls.mail.errors?.pattern">*</span></label>
+                    <input type="email" class="form-control" formControlName="mail">
+                    <span class="text-danger"
+                        *ngIf="editbillingForm.get('mail').hasError('required') && editbillingForm.get('mail').touched">
+                        E-mail is Required
+                    </span>
+                    <span class="text-danger"
+                        *ngIf="editbillingForm.get('mail').hasError('pattern') && editbillingForm.get('mail').touched">
+                        Enter Valid E-mail
+                    </span>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label>Company</label>
+                    <input type="text" class="form-control" formControlName="company">
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label for="mail">Country<span class="text-danger"
+                            *ngIf="editbillingForm.controls.country.errors?.required">*</span></label>
+                    <select formControlName="country" class="form-control"
+                        (change)="onSelectCountry($event.target.value)">
+                        <option *ngFor="let country of lstCountry" [value]="country.state_id">{{country.state}}
+                        </option>
+                    </select>
+                    <span class="text-danger"
+                        *ngIf="editbillingForm.get('country').hasError('required') && editbillingForm.get('country').touched">
+                        Country is Required
+                    </span>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label for="mail">State<span class="text-danger"
+                            *ngIf="editbillingForm.controls.state.errors?.required">*</span></label>
+                    <select class="form-control" formControlName="state">
+                        <option *ngFor="let state of statelist" [value]="state?.id">
+                            {{state.name}}</option>
+                    </select>
+
+                    <span class="text-danger"
+                        *ngIf="editbillingForm.get('state').hasError('required') && editbillingForm.get('state').touched">
+                        State is Required
+                    </span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label for="mail">City<span class="text-danger"
+                            *ngIf="editbillingForm.controls.city.errors?.required">*</span></label>
+                    <input type="text" class="form-control" formControlName="city">
+                    <span class="text-danger"
+                        *ngIf="editbillingForm.get('city').hasError('required') && editbillingForm.get('city').touched">
+                        City is Required
+                    </span>
+                </div>
+
+
+                <div class="form-group col-sm-6">
+                    <label for="pinno">ZIP/ Postal Code<span class="text-danger"
+                            *ngIf="editbillingForm.controls.pinno.errors?.required || editbillingForm.controls.pinno.errors?.pattern">*</span></label>
+                    <input type="text" class="form-control" formControlName="pinno">
+                    <span class="text-danger"
+                        *ngIf="editbillingForm.get('pinno').hasError('required') && editbillingForm.get('pinno').touched">
+                        Pin No is Required
+                    </span>
+                    <span class="text-danger"
+                        *ngIf="editbillingForm.get('pinno').hasError('pattern') && editbillingForm.get('pinno').touched">
+                        Enter valid pin no number
+                    </span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label for="mail">Address 1<span class="text-danger"
+                            *ngIf="editbillingForm.controls.addone.errors?.required">*</span></label>
+                    <input type="text" class="form-control" formControlName="addone">
+                    <span class="text-danger"
+                        *ngIf="editbillingForm.get('addone').hasError('required') && editbillingForm.get('addone').touched">
+                        Address is Required
+                    </span>
+
+                    <span class="text-danger"
+                        *ngIf="editbillingForm.get('addone').hasError('pattern') && editbillingForm.get('addone').touched">
+                        Enter valid Address
+                    </span>
+                </div>
+
+                <div class="form-group col-sm-6">
+                    <label>Address 2</label>
+                    <input type="text" class="form-control" formControlName="addtwo">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label for="mono">Mobile No.<span class="text-danger"
+                            *ngIf="editbillingForm.controls.mono.errors?.required ||editbillingForm.controls.mono.errors?.pattern">*</span></label>
+                    <input type="text" class="form-control" formControlName="mono">
+                    <span class="text-danger"
+                        *ngIf="editbillingForm.get('mono').hasError('required') && editbillingForm.get('mono').touched">
+                        Mobile No is Required
+                    </span>
+                    <span class="text-danger"
+                        *ngIf="editbillingForm.get('mono').hasError('pattern') && editbillingForm.get('mono').touched">
+                        Enter valid mobile number
+                    </span>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label for="faxno">Fax No.</label>
+                    <input type="text" class="form-control" formControlName="faxno">
+                    <!-- <span class="text-danger"
+                            *ngIf="editbillingForm.get('faxno').hasError('pattern') && editbillingForm.get('faxno').touched">
+                            Enter valid Fax number
+                        </span> -->
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

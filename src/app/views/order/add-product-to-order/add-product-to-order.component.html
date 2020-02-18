@@ -1,0 +1,216 @@
+<div class="card">
+    <div class="card-header">
+        <strong class=" pull-left">Product List</strong>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="itemForm">
+            <div class="table-responsive">
+                <table class="table table-grid table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th *ngFor="let h of tableHeader">{{h | titlecase}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of orderRecord let index = i">
+                            <td><img src="{{item.product.images.length > 0 ? item.product.images[0].src : 'assets/img/no_image.png'}}"
+                                    width="110px" height="110px" alt="product"></td>
+                            <td><button class="btn btn-link" (click)="GotoProduct(item?.product?.id)">
+                                    {{item?.product?.name}}</button><br>
+                                SKU:{{item?.product?.sku}}<br>{{item?.attribute_description}} </td>
+                            <td>{{item?.unit_price_excl_tax | number:'2.2-2'}}excl tax</td>
+                            <td>{{item?.quantity}}</td>
+                            <td>{{item?.discount_amount_excl_tax | number:'2.2-2'}}excl tax</td>
+                            <td>{{item?.price_excl_tax | number:'2.2-2'}}excl tax</td>
+                            <td>
+                                <button class="btn btn-success btn-sm mt-1" (click)="editRecord(item)"><i
+                                        class="fa fa-pencil"></i></button>
+                                <button class="btn btn-danger btn-sm  mt-1" (click)="DeleteRecord(item.id)"><i
+                                        class="fa fa-trash"></i></button>
+                            </td>
+                        </tr>
+
+                        <tr *ngIf="(orderRecord).length == 0" class="alert">
+                            <td colspan="8" class="alert">No record Found</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal fade" #editItem="bs-modal" bsModal tabindex="-1" role="dialog"
+                aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header header-box">
+                            {{ 'Edit Record'}}
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                (click)="close()">
+                                <span aria-hidden="true" class="text-white">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label>Product image</label>
+                                    <div *ngFor="let item of orderRecord let index = i">
+                                    <img formControlName="img" width="110px" height="110px" alt="product" />
+                                     </div>
+                                </div>
+                            </div> -->
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label class="pull-left">Product name</label>
+                                    <input type="text" readonly class="form-control" formControlName="productName">
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="pull-left">Quantity</label>
+                                    <input type="text" class="form-control" formControlName="quantity">
+                                    <span class="text-danger pull-left"
+                                        *ngIf="itemForm.get('quantity').hasError('pattern') && itemForm.get('quantity').touched ">
+                                        Enter Only pogitive digit
+                                    </span>
+
+                                    <span class="text-danger pull-left"
+                                        *ngIf="itemForm.get('quantity').hasError('required') && itemForm.get('quantity').touched ">
+                                        Required Quantity
+                                    </span>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label class="pull-left">Incl txt(Price)</label>
+                                    <input type="text" class="form-control" formControlName="unitinclprice">
+                                    <span class="text-danger pull-left"
+                                        *ngIf="itemForm.get('unitinclprice').hasError('pattern') && itemForm.get('unitinclprice').touched ">
+                                        Enter Only pogitive digit
+                                    </span>
+
+                                    <span class="text-danger pull-left"
+                                        *ngIf="itemForm.get('unitinclprice').hasError('required') && itemForm.get('unitinclprice').touched ">
+                                        Required Incl txt price
+                                    </span>
+
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="pull-left">Excl tex(Price)</label>
+                                    <input type="text" class="form-control" formControlName="unitexclprice">
+                                    <span class="text-danger pull-left"
+                                        *ngIf="itemForm.get('unitexclprice').hasError('pattern') && itemForm.get('unitexclprice').touched ">
+                                        Enter Only pogitive digit
+                                    </span>
+
+                                    <span class="text-danger pull-left"
+                                        *ngIf="itemForm.get('unitexclprice').hasError('required') && itemForm.get('unitexclprice').touched ">
+                                        Required Excl txt price
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label class="pull-left">Incl tex(Discount)</label>
+                                    <input type="text" class="form-control" formControlName="incldiscount">
+                                    <span class="text-danger pull-left"
+                                        *ngIf="itemForm.get('incldiscount').hasError('pattern') && itemForm.get('incldiscount').touched ">
+                                        Enter Only pogitive digit
+                                    </span>
+
+                                    <span class="text-danger pull-left"
+                                        *ngIf="itemForm.get('incldiscount').hasError('required') && itemForm.get('incldiscount').touched ">
+                                        Required Incl txt discount
+                                    </span>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="pull-left">Excl tex(Discount)</label>
+                                    <input type="text" class="form-control" formControlName="excldiscount">
+                                    <span class="text-danger pull-left"
+                                        *ngIf="itemForm.get('excldiscount').hasError('pattern') && itemForm.get('excldiscount').touched ">
+                                        Enter Only pogitive digit
+                                    </span>
+
+                                    <span class="text-danger pull-left"
+                                        *ngIf="itemForm.get('excldiscount').hasError('required') && itemForm.get('excldiscount').touched ">
+                                        Required Excl txt discount
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label class="pull-left">Incl txt(Total)</label>
+                                    <input type="text" class="form-control" formControlName="incltotal">
+                                    <span class="text-danger pull-left"
+                                        *ngIf="itemForm.get('incltotal').hasError('pattern') && itemForm.get('incltotal').touched ">
+                                        Enter Only pogitive digit
+                                    </span>
+
+                                    <span class="text-danger pull-left"
+                                        *ngIf="itemForm.get('incltotal').hasError('required') && itemForm.get('incltotal').touched ">
+                                        Required incl txt total
+                                    </span>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label class="pull-left">Excl tex(Total)</label>
+                                    <input type="text" class="form-control" formControlName="excltotal">
+                                    <span class="text-danger pull-left"
+                                        *ngIf="itemForm.get('excltotal').hasError('pattern') && itemForm.get('excltotal').touched ">
+                                        Enter Only pogitive digit
+                                    </span>
+
+                                    <span class="text-danger pull-left"
+                                        *ngIf="itemForm.get('excltotal').hasError('required') && itemForm.get('excltotal').touched ">
+                                        Required excl txt total
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-info float-left btn-sm" (click)="saveRecord()"> <i
+                                    class="fa fa-save">
+                                    Save </i></button>
+                            <!-- <button class="btn btn-danger float-left btn-sm" (click)="close()"> <i class="fa fa-close">
+                                    Close </i></button> -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="modal fade" #deleteModal="bs-modal" bsModal tabindex="-1" role="dialog"
+                aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">{{ 'Delete Record'}}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                (click)="close()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        Are you sure want to delete this record?
+                        <div class="modal-footer">
+                            <button class="btn btn-success btn-sm" (click)="deleteRec()">{{ 'Delete' }}</button>
+                            <button class="btn btn-danger float-left btn-sm" (click)="close()">Close </button>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </form>
+
+        <div class="row">
+            <div class="col col-sm-6 " *ngFor="let item of orderlst let index = i">
+                <span class="pull-left">{{item?.checkout_attribute_description}}</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 pull-left">
+                <button class="btn btn-primary pull-left btn-sm" (click)="addProduct()"><i class="fa fa-plus"> ADD
+                        PRODUCT</i></button>
+            </div>
+        </div>
+    </div>
+</div>

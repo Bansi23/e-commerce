@@ -1,0 +1,34 @@
+<div class="col-sm-12">
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <strong>
+                    <h3>{{title}}- {{orderId}}</h3>
+                </strong>
+                <button class="btn btn-link" (click)="backToSearchList()"><i class="fa fa-arrow-circle-o-left">
+                        back to
+                        order list</i></button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="animated fadeIn">
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        <tabset class="tab-container tab-box-main nav-justified">
+                            <tab heading="Info" class="nav-item">
+                                <app-order-info class="nav-link"></app-order-info>
+                            </tab>
+                            <tab heading="Billing & Shipping" class="nav-item">
+                                <app-billing-shipping class="nav-link"></app-billing-shipping>
+                            </tab>
+                            <tab heading="Product" class="nav-item">
+                                <app-add-product-to-order></app-add-product-to-order>
+                            </tab>
+                        </tabset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

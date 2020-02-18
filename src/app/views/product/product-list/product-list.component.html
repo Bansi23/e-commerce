@@ -1,0 +1,78 @@
+<div class="animated fadeIn">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Product List</strong>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <!-- <th><input type="checkbox" [(ngModel)]="selectAll" (change)="select_all()"></th> -->
+                                <th *ngFor="let h of tableHeader">{{h | titlecase}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="let prod of lstProduct | paginate: { itemsPerPage: pageSize, currentPage: pageIndex, totalItems: totalRecords }; let i=index;">
+                                <!-- <td><input type="checkbox" [(ngModel)]="prod.select" (change)="checkIfAllSelected(prod)"
+                                        [ngModelOptions]="{standalone: true}"></td> -->
+                                <td><img src="{{prod.images.length > 0 ? prod.images[0].src : 'assets/img/no_image.png'}}"
+                                        width="110px" height="110px" alt="product" /></td>
+                                <td>{{prod.name}}</td>
+                                <td>{{prod.sku}}</td>
+                                <td>{{prod.price | number : '2.1-3'}}</td>
+                                <td>{{prod.stock_quantity}}</td>
+                                <td>{{prod.product_type}}</td>
+                                <td><span class="fa"
+                                        [ngClass]="{'fa-check text-success': prod.published ? 'fa-close text-danger' : !prod.published}"></span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-success btn-sm mt-1" (click)="editProduct(prod.id)"><i
+                                            class="fa fa-pencil"></i></button>
+                                    <button class="btn btn-danger btn-sm mt-2" (click)="deleteProduct(prod.id)"><i
+                                            class="fa fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr class="top-mrging">
+                                <td colspan="8" *ngIf="(lstProduct).length == 0" role="alert" class="alert">No
+                                    record Found
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 col-12" *ngIf="totalRecords">
+                        <div class="total-count--table">
+                            <span>Total number of records : {{ totalRecords}}</span>
+                            <button class="btn btn-primary btn-sm" (click)="getProductList()"><i
+                                    class="fa fa-refresh"></i></button>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-12" *ngIf="(lstProduct).length > 0">
+                        <div class="text-right pagignation-page">
+                            <pagination-controls class="pagination-sm pagination-box"
+                                (pageChange)="pageChanged($event)">
+                            </pagination-controls>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2 col-12" *ngIf="(lstProduct).length > 0">
+                        <div class="text-left">
+                            <select class="form-control" [(ngModel)]="pageSize"
+                                (change)="changePageSize($event.target.value)">
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                                <option value="40">40</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

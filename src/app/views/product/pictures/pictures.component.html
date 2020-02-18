@@ -1,0 +1,123 @@
+<!-- <div class="showContenet"> -->
+    <div class="row">
+        <div class="col-sm-7">
+            <div class="card">
+                <div class="card-header">
+                    <strong>
+                        Pictures
+                    </strong>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th *ngFor="let h of tableHeader">{{h | titlecase}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                *ngFor="let pic of lstPicture | paginate: { itemsPerPage: pageSize, currentPage: pageIndex, totalItems: totalRecords }; let i=index;">
+                                <td><img src="{{pic  ? pic.src : 'assets/img/no_image.png'}}" width="150px"
+                                        height="150px" alt="product" /></td>
+                                <td>{{pic.position}}</td>
+                                <td>
+                                    <button class="btn btn-success btn-sm" (click)="editPicture(i)"><i
+                                            class="fa fa-edit"></i></button>
+                                    <button class="btn btn-danger left-margin btn-sm" (click)="deletePicture(i)"><i
+                                            class="fa fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr class="top-mrging">
+                                <td colspan="2" *ngIf="(lstPicture).length == 0" role="alert" class="alert">No
+                                    record Found
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col-md-4 col-12">
+                            <div class="total-count--table">
+                                <span>Total number of records : {{ totalRecords}}</span>
+                                <button class="btn btn-primary btn-sm" (click)="getPictureList()"><i
+                                        class="fa fa-refresh"></i></button>
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-12" *ngIf="lstPicture.length > 0">
+                            <div class="text-right pagignation-page">
+                                <pagination-controls class="pagination-sm pagination-box"
+                                    (pageChange)="pageChanged($event)">
+                                </pagination-controls>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-12" *ngIf="lstPicture.length > 0">
+                            <div class="text-left pagignation-select">
+                                <select class="form-control" [(ngModel)]="pageSize"
+                                    (change)="changePageSize($event.target.value)">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="40">40</option>
+                                    <option value="50">50</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-5">
+            <form [formGroup]="prodPictureForm" class="form-validate" role="form" name="productInfo">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>
+                            Add a new picture
+                        </strong>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="form-group col-sm-12">
+                                <label>Picture</label>
+                                <input type="file" id="file-input" formControlName="src" (change)="readUrl($event)">
+                            </div>
+                        </div>
+                        <!-- <div class="row">
+                            <div class="form-group col-sm-12">
+                                <label>Alt</label>
+                                <input type="text" class="form-control" formControlName="alt">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-12">
+                                <label>Title</label>
+                                <input type="text" class="form-control" formControlName="title">
+                            </div>
+                        </div> -->
+                        <div class="row">
+                            <div class="form-group col-sm-12">
+                                <label>Display order</label>
+                                <input type="number" class="form-control" formControlName="position">
+                            </div>
+                        </div>
+                        <div class="row pull-right">
+                            <button class="btn btn-primary btn-sm" (click)="addPicture()"><i class="fa fa-plus">Add
+                                    Product
+                                    Picture</i></button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+<!-- </div> -->
+
+<!-- <div class="hideContent">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-info">
+                <strong>You need to save the product before you can upload pictures for this
+                    product page.</strong>
+            </div>
+        </div>
+    </div>
+</div> -->

@@ -1,0 +1,180 @@
+<div class="card">
+    <div class="card-header">
+        <strong>Add Product to order</strong>
+        <button class="btn btn-link" (click)="backToSearchList()"><i class="fa fa-arrow-circle-o-left"> back to
+                View Order</i></button>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="AddProduct">
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label><b>Price (incl tax)</b></label>
+                    <input type="textbox" class="form-control" formControlName="priceIncl">
+                    <span class="text-danger"
+                        *ngIf="AddProduct.get('priceIncl').hasError('pattern') && AddProduct.get('priceIncl').touched ">
+                        Allow only digit
+                    </span>
+                    <span class="text-danger"
+                        *ngIf="AddProduct.get('priceIncl').hasError('required') && AddProduct.get('priceIncl').touched ">
+                        Required
+                    </span>
+                </div>
+
+                <div class="form-group col-sm-6">
+                    <label>Price (excl tax) </label>
+                    <input type="textbox" class="form-control" formControlName="priceExcl">
+                    <span class="text-danger"
+                        *ngIf="AddProduct.get('priceExcl').hasError('pattern') && AddProduct.get('priceExcl').touched ">
+                        Allow only digit
+                    </span>
+                    <span class="text-danger"
+                        *ngIf="AddProduct.get('priceExcl').hasError('required') && AddProduct.get('priceExcl').touched ">
+                        Required
+                    </span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label>Total (incl tax) </label>
+                    <input type="textbox" class="form-control" formControlName="totalIncl">
+                    <span class="text-danger"
+                        *ngIf="AddProduct.get('totalIncl').hasError('pattern') && AddProduct.get('totalIncl').touched ">
+                        Allow only digit
+                    </span>
+
+                    <span class="text-danger"
+                        *ngIf="AddProduct.get('totalIncl').hasError('required') && AddProduct.get('totalIncl').touched ">
+                        Required
+                    </span>
+                </div>
+
+                <div class="form-group col-sm-6">
+                    <label>Total (excl tax) </label>
+                    <input type="textbox" class="form-control" formControlName="totalExcl">
+                    <span class="text-danger"
+                        *ngIf="AddProduct.get('totalExcl').hasError('pattern') && AddProduct.get('totalExcl').touched ">
+                        Allow only digit
+                    </span>
+
+                    <span class="text-danger"
+                        *ngIf="AddProduct.get('totalExcl').hasError('required') && AddProduct.get('totalExcl').touched ">
+                        Required
+                    </span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label> Quantity</label>
+                    <input type="textbox" class="form-control" formControlName="quantity">
+                    <span class="text-danger"
+                        *ngIf="AddProduct.get('quantity').hasError('pattern') && AddProduct.get('quantity').touched ">
+                        Allow only digit
+                    </span>
+
+                    <span class="text-danger"
+                        *ngIf="AddProduct.get('quantity').hasError('required') && AddProduct.get('quantity').touched ">
+                        Required
+                    </span>
+                </div>
+            </div>
+
+
+            <div class="card" *ngIf="productAttributes.length">
+                <div class="card-header"><span>Attribute Info</span></div>
+                <div class="card-body">
+                    <div *ngFor="let attr of productAttributes">
+                        <div *ngIf="attr.attribute_control_type_name == 'TextBox'">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label>{{attr.text_prompt}}</label>
+                                    <input type="textbox" class="form-control" formControlName="inputtext">
+                                    <span class="text-danger"
+                                        *ngIf="AddProduct.get('inputtext').hasError('required') && AddProduct.get('inputtext').touched ">
+                                        Enter Your Text
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="attr.attribute_control_type_name == 'DropdownList'">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label *ngIf="attr.product_attribute_name">{{attr.product_attribute_name}}</label>
+
+                                    <select class="form-control" formControlName="droplist">
+                                        <option value="">---</option>
+                                        <option *ngFor="let item of attr.attribute_values">
+                                            {{item.name}}
+                                        </option>
+                                    </select>
+                                    <!-- <span class="text-danger"
+                                        *ngIf="AddProduct.get('droplist').hasError('required') && AddProduct.get('droplist').touched ">
+                                        Select {{attr.product_attribute_name}}
+                                    </span> -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="attr.attribute_control_type_name == 'RadioList'">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label>{{attr.text_prompt}}</label>
+                                    <ng-container *ngIf="!attr.attribute_values.length; else elseTemplate">
+                                        <span class="text-danger">*</span>
+                                    </ng-container>
+                                    <ng-template #elseTemplate>
+                                        <div *ngFor="let i of attr.attribute_values">
+                                            <label> <input type="radio" name="RadioList"
+                                                    formControlName="radiolist">{{i.name}}</label>
+                                        </div>
+                                    </ng-template>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="attr.attribute_control_type_name == 'ImageSquares'">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label>{{attr.product_attribute_name}}</label>
+                                    <div *ngFor="let i of attr.attribute_values">
+                                        <label> <input type="radio" name="ImageSquares"
+                                                formControlName="imagesquares">{{i.name}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="attr.attribute_control_type_name == 'MultilineTextbox'">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label>{{attr.text_prompt}}</label>
+                                    <textarea class="form-control" rows="2" cols="3"
+                                        formControlName="multilinetextbox"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="attr.attribute_control_type_name == 'Checkboxes'">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label>{{attr.product_attribute_name}}</label>
+                                    <div *ngFor="let i of attr.attribute_values">
+                                        <label> <input type="checkbox" [checked]=i.is_pre_selected
+                                                formControlName="checkboxes">{{i.name}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class=" col-md-12">
+            <button class="btn btn-primary btn-sm" (click)="addProducttoOrder()"><i class="fa fa-plus"></i> ADD
+                PRODUCT</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,320 @@
+<div class="col-sm-12">
+    <div class="card">
+        <div class="card-header">
+            <div class="pull-left">
+                <div class="row">
+                    <strong>
+                        <h3>{{title}}</h3>
+                    </strong>
+                    <button class="btn btn-link" (click)="backToList()"><i class="fa fa-arrow-circle-o-left"> back to
+                            product details</i></button>
+                </div>
+            </div>
+            <div class="pull-right">
+                <!-- <button class="btn btn-primary text-white" (click)="addProduct()"><i class="fa fa-save">
+                        Save</i></button>&nbsp; -->
+                <button class="btn btn-info text-white btn-sm" (click)="saveAttribute()"><i class="fa fa-save"> Save and
+                        Continue Edit</i></button>
+            </div>
+        </div>
+        <div class="card-body">
+            <!-- Attribute Info -->
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Attribute Info</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- <app-attributeinfo></app-attributeinfo> -->
+                        <form [formGroup]="attrInfoForm" class="form-validate" role="form" name="productInfo">
+                            <div class="col-sm-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="form-group col-sm-4">
+                                                <label>Attribute</label>
+                                                <select class="form-control" formControlName="attribute">
+                                                    <option *ngFor="let a of lstAttribute" [value]="a.id">
+                                                        {{a.name}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-sm-4">
+                                                <label>Text prompt</label>
+                                                <input type="text" class="form-control" formControlName="textPrompt">
+                                            </div>
+                                            <div class="form-group col-sm-4">
+                                                <label>Is Required
+                                                    <input type="checkbox" formControlName="isReq">
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-sm-4">
+                                                <label>Control type</label>
+                                                <select class="form-control" formControlName="controlType"
+                                                    (change)="changeControlType($event.target.value)">
+                                                    <option *ngFor="let c of lstControl" [value]="c.id">
+                                                        {{c.name}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-sm-4">
+                                                <label>Display order</label>
+                                                <input type="number" class="form-control"
+                                                    formControlName="displayOrder">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!--End Attribute Info -->
+
+            <!-- Attribute Value -->
+            <div class="attribute-value">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Attribute Value</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th *ngFor="let h of tableHeader">{{h | titlecase}}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let val of lstAttrValue">
+                                                        <td>
+                                                            <span *ngIf="val.type_id == 0">Simple</span>
+                                                            <span *ngIf="val.type_id == 10">Associated to product</span>
+                                                        </td>
+                                                        <td>{{val.name}}</td>
+                                                        <td>{{val.associated_product_name}}</td>
+                                                        <td>{{val.price_adjustment}}</td>
+                                                        <td>{{val.weight_adjustment}}</td>
+                                                        <td><span class="fa"
+                                                                [ngClass]="{'fa-check text-success': val.is_pre_selected , 'fa-close text-danger' : !val.is_pre_selected}"></span>
+                                                        </td>
+                                                        <td>
+                                                            <span *ngIf="val.product_image_id"><img src="{{imageSrc}}"
+                                                                    width="100px" height="100px" alt="product" /></span>
+                                                        </td>
+                                                        <td>{{val.display_order}}</td>
+                                                        <td>
+                                                            <button class="btn btn-success"
+                                                                (click)="editAttrValue(val.id)"><i
+                                                                    class="fa fa-edit"></i></button>
+                                                            <!-- <button class="btn btn-danger left-margin" (click)="deletePicture(i)"><i
+                                                                                    class="fa fa-trash"></i></button> -->
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="top-mrging">
+                                                        <td colspan="9" *ngIf="(lstAttrValue).length == 0" role="alert"
+                                                            class="alert-warning">No
+                                                            record Found
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <div class="row">
+                                                <button class="btn btn-primary btn-sm " (click)="showValue()"><i
+                                                        class="fa fa-plus">Add a new
+                                                        value</i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div bsModal #valuesModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+                                aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header header-box">
+                                            {{'Add a new value'}}
+                                            <button type="button" class="close" (click)="valuesModal.hide()"
+                                                aria-label="Close">
+                                                <span aria-hidden="true" class="text-white">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form [formGroup]="attrValueForm" class="form-validate" role="form"
+                                                name="attrValue">
+                                                <div class="col-sm-12">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="form-group col-sm-6">
+                                                                    <label>Attribute value type</label>
+                                                                    <select class="form-control"
+                                                                        formControlName="valueType"
+                                                                        (change)="changeValueType($event.target.value)">
+                                                                        <option *ngFor="let a of lstAttributeValue"
+                                                                            [value]="a.id">
+                                                                            {{a.name}}
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="form-group col-sm-6">
+                                                                    <label>Name</label>
+                                                                    <input type="text" class="form-control"
+                                                                        formControlName="name">
+                                                                    <span class="text-danger"
+                                                                        *ngIf="attrValueForm.get('name').hasError('required') && attrValueForm.get('name').touched ">
+                                                                        Name is required
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="associateType">
+                                                                <div class="row">
+                                                                    <div class="form-group col-sm-12">
+                                                                        <label>Associated product</label>
+                                                                        <button class="btn btn-primary"
+                                                                            (click)="associateProdList()">Associate a
+                                                                            product</button>
+                                                                        <span class="text-white bg-info">
+                                                                            {{associateProduct ? associateProduct : ''}}
+                                                                        </span>
+
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="form-group col-sm-6">
+                                                                        <label>Customer enters quantity?
+                                                                            <input type="checkbox"
+                                                                                formControlName="iscustEnter"
+                                                                                (change)="isCustEnter($event)">
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="form-group col-sm-6">
+                                                                        <div class="isCustEnter">
+                                                                            <label>Product quantity</label>
+                                                                            <input type="number" class="form-control"
+                                                                                formControlName="pQuantity">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="simpleType">
+                                                                <div class="row">
+                                                                    <div class="form-group col-sm-6">
+                                                                        <label>Price adjustment</label>
+                                                                        <input type="number" class="form-control"
+                                                                            formControlName="priceAdj"
+                                                                            (keydown)="restrict($event)">
+                                                                        <span class="text-danger"
+                                                                            *ngIf="attrValueForm.controls['priceAdj'].hasError('pattern') && (attrValueForm.controls['priceAdj'].dirty || attrValueForm.controls['priceAdj'].touched)">
+                                                                            Enter valid price adjustment</span>
+                                                                    </div>
+                                                                    <div class="form-group col-sm-6">
+                                                                        <label>Price adjustment. Use percentage
+                                                                            <input type="checkbox"
+                                                                                formControlName="isPriceAdd">
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="form-group col-sm-6">
+                                                                        <label>Weight adjustment</label>
+                                                                        <input type="number" class="form-control"
+                                                                            formControlName="weightAdj"
+                                                                            (keydown)="restrict($event)">
+                                                                        <span class="text-danger"
+                                                                            *ngIf="attrValueForm.controls['weightAdj'].hasError('pattern') && (attrValueForm.controls['weightAdj'].dirty || attrValueForm.controls['weightAdj'].touched)">
+                                                                            Enter valid weight adjustment</span>
+                                                                    </div>
+                                                                    <div class="form-group col-sm-6">
+                                                                        <label>Cost</label>
+                                                                        <input type="number" class="form-control"
+                                                                            formControlName="cost"
+                                                                            (keydown)="restrict($event)">
+                                                                        <span class="text-danger"
+                                                                            *ngIf="attrValueForm.controls['cost'].hasError('pattern') && (attrValueForm.controls['cost'].dirty || attrValueForm.controls['cost'].touched)">
+                                                                            Enter valid cost</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="form-group col-sm-6">
+                                                                    <label>Is pre-selected
+                                                                        <input type="checkbox"
+                                                                            formControlName="isPreSelected">
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-group col-sm-6">
+                                                                    <label>Display order</label>
+                                                                    <input type="number" class="form-control"
+                                                                        formControlName="displayOrder">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <label class="col-md-2 col-form-label">Pictures</label>
+                                                                <div class="col-md-10 col-form-label">
+                                                                    <div class="form-check form-check-inline">
+                                                                        <label class="form-check-label">
+                                                                            <input class="form-check-input" type="radio"
+                                                                                formControlName="picture" [value]="">No
+                                                                            Pictures</label>
+                                                                        <ng-container *ngFor="let img of imageList">
+                                                                            <label class="form-check-label">
+                                                                                <input class="form-check-input"
+                                                                                    type="radio"
+                                                                                    formControlName="picture"
+                                                                                    [value]="img.id">
+                                                                                <img src="{{img.src}}" width="100px"
+                                                                                    height="100px" alt="product" />
+                                                                            </label>
+                                                                        </ng-container>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-info btn-sm" (click)="addAttributeValues()"><i
+                                                    class="fa fa-save"> Save</i></button>
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+
+                            <div bsModal #associateModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+                                aria-labelledby="associateModal" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Associate a product</h4>
+                                            <button type="button" class="close" (click)="associateModal.hide()"
+                                                aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <app-associate-produst-list (associateProduct)="associatedProduct($event)"
+                                                (productList)="getProductList($event)"></app-associate-produst-list>
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Attribute Value -->
+        </div>
+    </div>
+</div>
